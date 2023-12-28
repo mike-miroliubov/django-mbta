@@ -1,0 +1,12 @@
+<ul>
+    {% for line, branches in lines %}
+    <li style="color: {{ line.color }}">
+        {{ line.name }}
+        <ul>
+            {% for branch in branches %}
+                <li>{{ branch.name }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>

@@ -2,6 +2,7 @@ from enum import Enum
 from typing import List
 
 from django.db import models
+from django.db.models import F
 
 # Create your models here.
 
@@ -76,8 +77,15 @@ class Branch(models.Model):
 class BranchStation(models.Model):
     class Meta:
         db_table = 'branch_station'
-        ordering = [models.F('order').asc()]
+        ordering = [F('order').asc()]
+        indexes = [
+            models.Index(F('branch'), F('order').asc(), name='branch_order')
+        ]
+        constraints = [
+            models.UniqueConstraint(fields=['branch', 'station'], name='uq_branchstation_branch_station')
+        ]
 
+    id = models.UUIDField(primary_key=True)
     station = models.ForeignKey(Station, on_delete=models.RESTRICT)
     branch = models.ForeignKey(Branch, on_delete=models.RESTRICT)
     order = models.IntegerField()

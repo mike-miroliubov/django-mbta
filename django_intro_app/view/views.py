@@ -4,16 +4,11 @@ from typing import List
 
 from django.http import JsonResponse, HttpRequest, HttpResponseBadRequest, HttpResponseServerError, HttpResponse
 from django.shortcuts import render
-from django.template import loader
 
 from django_intro_app.exception.invalid_input_exception import InvalidInputException
 from django_intro_app.models import Line
-from django_intro_app.service.line_service import LineService
-from django_intro_app.view.serializers.LineSerializer import LineSerializer
-
 
 # Create your views here.
-line_service = LineService()
 
 
 def list_stations(request: HttpRequest):
@@ -26,6 +21,7 @@ def list_stations(request: HttpRequest):
 
 
 def handle_exceptions(func):
+    # to correctly preserve original function name and parameters use @functools.wraps(func)
     @functools.wraps(func)
     def handler(*args, **kwargs):
         try:
@@ -36,18 +32,6 @@ def handle_exceptions(func):
             return HttpResponseServerError(JsonResponse({'error': str(e)}))
 
     return handler
-
-
-@handle_exceptions
-def get_line(request: HttpRequest, id: str):
-    return JsonResponse(LineSerializer(line_service.get_line(id)).data)
-
-
-@handle_exceptions
-def list_lines(request: HttpRequest):
-    return JsonResponse({
-        'lines': LineSerializer(Line.objects.all(), many=True).data
-    })
 
 
 def lines_view(request: HttpRequest):

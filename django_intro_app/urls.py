@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.urls import path
 from .view import views
+from .view import line
 
 app_name = 'mbta'
 urlpatterns = [
     path('stations/', views.list_stations),
-    path('lines/', views.list_lines),
-    path('lines/<str:id>', views.get_line),
+    path('lines/', line.list_lines),
+    path('lines/<str:id>', line.get_line),
 
     path('test/', views.lines_view)
 ]

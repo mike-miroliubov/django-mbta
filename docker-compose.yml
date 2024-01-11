@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  mbta:
+    image: mbta
+    volumes:
+      - ./db.sqlite3:/opt/app/db.sqlite3
+    ports:
+      - 8000:8000
+    environment:
+      DJANGO_DEBUG: True
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1

@@ -2,8 +2,10 @@ import functools
 import uuid
 from typing import List
 
-from django.http import JsonResponse, HttpRequest, HttpResponseBadRequest, HttpResponseServerError, HttpResponse
+from django.http import JsonResponse, HttpRequest, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render
+from django.views.decorators.http import require_http_methods
+from rest_framework.decorators import api_view
 
 from django_intro_app.exception.invalid_input_exception import InvalidInputException
 from django_intro_app.models import Line
@@ -11,6 +13,7 @@ from django_intro_app.models import Line
 # Create your views here.
 
 
+@api_view(['GET'])
 def list_stations(request: HttpRequest):
     return JsonResponse({
         'stations': [{
@@ -34,6 +37,7 @@ def handle_exceptions(func):
     return handler
 
 
+@require_http_methods(['GET'])
 def lines_view(request: HttpRequest):
     lines: List[Line] = Line.objects.all()
     branches_by_line = {l: l.branch_set.all() for l in lines}

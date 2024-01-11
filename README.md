@@ -8,6 +8,13 @@
 * TODO:
 * tests +
 * more functionality
-* Docker and real server deployment
+* Docker and real server deployment +
 * real database
 * tests w/ Docker and testcontainers
+
+# Run:
+```python manage.py runserver```
+
+OR
+
+```gunicorn django_intro.wsgi:application --bind 0.0.0.0:8000```

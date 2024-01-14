@@ -10,7 +10,10 @@
 * more functionality
 * Docker and real server deployment +
 * real database
+* * connection pool  
 * tests w/ Docker and testcontainers
+* use https://django-environ.readthedocs.io/en/latest/
+* Authentication
 
 # Run:
 ```python manage.py runserver```
@@ -18,3 +21,10 @@
 OR
 
 ```gunicorn django_intro.wsgi:application --bind 0.0.0.0:8000```
+
+# Run in Docker
+```
+docker build . -t mbta
+docker compose up -d 
+docker-compose exec mbta python manage.py migrate --noinput
+```

@@ -75,21 +75,15 @@ WSGI_APPLICATION = 'django_intro.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": os.environ.get("DJANGO_SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("DJANGO_SQL_DATABASE", BASE_DIR / "db.sqlite3"),
+        "USER": os.environ.get("DJANGO_SQL_USER"),
+        "PASSWORD": os.environ.get("DJANGO_SQL_PASSWORD"),
+        "HOST": os.environ.get("DJANGO_SQL_HOST", "localhost"),
+        "PORT": os.environ.get("DJANGO_SQL_PORT", "5432"),
     }
 }
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "OPTIONS": {
-#             "service": "my_service",
-#             "passfile": ".my_pgpass",
-#         },
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

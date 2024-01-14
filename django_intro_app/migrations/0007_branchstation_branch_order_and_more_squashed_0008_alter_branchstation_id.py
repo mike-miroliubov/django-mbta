@@ -20,9 +20,9 @@ class Migration(migrations.Migration):
             model_name='branchstation',
             constraint=models.UniqueConstraint(fields=('branch', 'station'), name='uq_branchstation_branch_station'),
         ),
-        migrations.AlterField(
-            model_name='branchstation',
-            name='id',
-            field=models.UUIDField(primary_key=True, serialize=False),
-        ),
+        # migrations.AlterField(
+        #     model_name='branchstation',
+        #     name='id',
+        #     field=models.UUIDField(primary_key=True, serialize=False),
+        # ),
     ]

@@ -1,3 +1,4 @@
+import uuid
 from enum import Enum
 from typing import List
 
@@ -85,7 +86,7 @@ class BranchStation(models.Model):
             models.UniqueConstraint(fields=['branch', 'station'], name='uq_branchstation_branch_station')
         ]
 
-    id = models.UUIDField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
     station = models.ForeignKey(Station, on_delete=models.RESTRICT)
     branch = models.ForeignKey(Branch, on_delete=models.RESTRICT)
     order = models.IntegerField()

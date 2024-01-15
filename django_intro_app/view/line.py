@@ -1,7 +1,7 @@
 from django.http import HttpRequest, JsonResponse
 from rest_framework.decorators import api_view
 
-from .serializers.LineSerializer import LineSerializer
+from .serializers.line_serializer import LineSerializer
 from .views import handle_exceptions
 from ..models import Line
 from ..service.line_service import LineService

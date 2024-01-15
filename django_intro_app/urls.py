@@ -17,12 +17,18 @@ Including another URLconf
 from django.urls import path
 from .view import views
 from .view import line
+from .view.branch import LineBranchAPI, BranchAPI
+from .view.station import BranchStationAPI, StationAPI
 
 app_name = 'mbta'
 urlpatterns = [
     path('stations/', views.list_stations),
     path('lines/', line.list_lines),
     path('lines/<str:id>', line.get_line),
+    path('lines/<str:line_id>/branches', LineBranchAPI.as_view()),
+    path('branches/<str:id>', BranchAPI.as_view()),
+    path('branches/<str:branch_id>/stations', BranchStationAPI.as_view()),
+    path('stations/<str:id>', StationAPI.as_view()),
 
     path('test/', views.lines_view)
 ]

@@ -14,6 +14,7 @@ RUN pip install -r requirements.txt
 COPY ./django_intro /opt/app/django_intro
 COPY ./django_intro_app /opt/app/django_intro_app
 COPY ./manage.py /opt/app
+COPY ./scripts/run.sh /opt/app
 
 USER appuser
-CMD ["gunicorn", "django_intro.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["bash", "run.sh"]

@@ -9,11 +9,13 @@
 * tests +
 * more functionality
 * Docker and real server deployment +
-* real database
+* real database +
 * * connection pool  
 * tests w/ Docker and testcontainers
 * use https://django-environ.readthedocs.io/en/latest/
+* clean architecture https://github.com/sdediego/django-clean-architecture/tree/main
 * Authentication
+* Dependency injection
 
 # Run:
 ```python manage.py runserver```

@@ -86,7 +86,7 @@ class BranchStation(models.Model):
             models.UniqueConstraint(fields=['branch', 'station'], name='uq_branchstation_branch_station')
         ]
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4())
+    id = models.UUIDField(primary_key=True)
     station = models.ForeignKey(Station, on_delete=models.RESTRICT)
     branch = models.ForeignKey(Branch, on_delete=models.RESTRICT)
     order = models.IntegerField()
@@ -99,4 +99,12 @@ class Train(models.Model):
 
     id = models.UUIDField(primary_key=True)
     name = models.CharField(max_length=8)
-    line = models.ForeignKey(Line, on_delete=models.RESTRICT)
+    branch = models.ForeignKey(Branch, on_delete=models.RESTRICT, null=False)
+
+
+# class TrainRegistration(models.Model):
+#     class Meta:
+#         db_table = 'train_registration'
+#
+#     id = models.UUIDField(primary_key=True)
+#     train = models.ForeignKey

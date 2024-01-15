@@ -98,13 +98,29 @@ class Train(models.Model):
         db_table = 'train'
 
     id = models.UUIDField(primary_key=True)
-    name = models.CharField(max_length=8)
+    name = models.CharField(max_length=8, unique=True)
     branch = models.ForeignKey(Branch, on_delete=models.RESTRICT, null=False)
 
 
-# class TrainRegistration(models.Model):
-#     class Meta:
-#         db_table = 'train_registration'
-#
-#     id = models.UUIDField(primary_key=True)
-#     train = models.ForeignKey
+@auto_str(['id'])
+class TrackingDevice(models.Model):
+    class Meta:
+        db_table = 'tracking_device'
+        # constraints = [
+        #     models.UniqueConstraint(fields=['api_key'])
+        # ]
+
+    id = models.UUIDField(primary_key=True)
+    api_key = models.CharField(max_length=32, unique=True)
+
+
+class TrainRegistration(models.Model):
+    class Meta:
+        db_table = 'train_registration'
+        constraints = [
+            models.UniqueConstraint(fields=['train', 'tracking_device'], name='uq_train_registration_train_tracking_device')
+        ]
+
+    id = models.UUIDField(primary_key=True)
+    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    tracking_device = models.ForeignKey(TrackingDevice, on_delete=models.CASCADE)

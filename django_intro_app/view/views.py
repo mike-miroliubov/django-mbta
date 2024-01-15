@@ -3,7 +3,8 @@ import logging
 import uuid
 from typing import List
 
-from django.core.exceptions import ValidationError
+import rest_framework.exceptions
+import django.core.exceptions
 from django.http import JsonResponse, HttpRequest, HttpResponseBadRequest, HttpResponseServerError
 from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
@@ -24,6 +25,7 @@ def list_stations(request: HttpRequest):
         }]
     })
 
+
 logger = logging.getLogger('main')
 
 
@@ -33,11 +35,11 @@ def handle_exceptions(func):
     def handler(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except (InvalidInputException, ValidationError) as e:
-            logger.exception('exception')
+        except (InvalidInputException, django.core.exceptions.ValidationError, rest_framework.exceptions.ValidationError) as e:
+            logger.exception('400 exception')
             return HttpResponseBadRequest(JsonResponse({'error': str(e)}))
         except Exception as e:
-            logger.exception('exception')
+            logger.exception('500 exception')
             return HttpResponseServerError(JsonResponse({'error': str(e)}))
 
     return handler

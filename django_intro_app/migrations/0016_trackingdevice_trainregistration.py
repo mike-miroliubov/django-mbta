@@ -25,8 +25,8 @@ class Migration(migrations.Migration):
             name='TrainRegistration',
             fields=[
                 ('id', models.UUIDField(primary_key=True, serialize=False)),
-                ('tracking_device', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='django_intro_app.trackingdevice')),
-                ('train', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='django_intro_app.train')),
+                ('tracking_device', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='django_intro_app.trackingdevice')),
+                ('train', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='django_intro_app.train')),
             ],
             options={
                 'db_table': 'train_registration',
@@ -35,11 +35,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='train',
             name='name',
-            field=models.CharField(max_length=8, unique=True),
-        ),
-        migrations.AddConstraint(
-            model_name='trainregistration',
-            constraint=models.UniqueConstraint(fields=('train', 'tracking_device'),
-                                               name='uq_train_registration_train_tracking_device'),
+            field=models.CharField(max_length=8, unique=True, db_index=True),
         ),
     ]

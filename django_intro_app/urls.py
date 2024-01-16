@@ -19,6 +19,7 @@ from .view import views
 from .view import line
 from .view.branch import LineBranchAPI, BranchAPI
 from .view.station import BranchStationAPI, StationAPI
+from .view.train import TrainRegistrationAPI
 
 app_name = 'mbta'
 urlpatterns = [
@@ -29,6 +30,7 @@ urlpatterns = [
     path('branches/<str:id>', BranchAPI.as_view()),
     path('branches/<str:branch_id>/stations', BranchStationAPI.as_view()),
     path('stations/<str:id>', StationAPI.as_view()),
+    path('trains/<str:id>/registration', TrainRegistrationAPI.as_view()),
 
     path('test/', views.lines_view)
 ]

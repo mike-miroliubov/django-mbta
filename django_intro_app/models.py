@@ -98,7 +98,7 @@ class Train(models.Model):
         db_table = 'train'
 
     id = models.UUIDField(primary_key=True)
-    name = models.CharField(max_length=8, unique=True)
+    name = models.CharField(max_length=8, unique=True, db_index=True)
     branch = models.ForeignKey(Branch, on_delete=models.RESTRICT, null=False)
 
 
@@ -106,21 +106,35 @@ class Train(models.Model):
 class TrackingDevice(models.Model):
     class Meta:
         db_table = 'tracking_device'
-        # constraints = [
-        #     models.UniqueConstraint(fields=['api_key'])
-        # ]
 
     id = models.UUIDField(primary_key=True)
     api_key = models.CharField(max_length=32, unique=True)
+
+    @property
+    def is_anonymous(self):
+        """
+        Tracking Device represents user authentication. These methods are required for Django Rest Framework to
+        properly handle authentication.
+        Always return False. This is a way of comparing User objects to
+        anonymous users.
+        """
+        return False
+
+    @property
+    def is_authenticated(self):
+        """
+        Tracking Device represents user authentication. These methods are required for Django Rest Framework to
+        properly handle authentication.
+        Always return True. This is a way to tell if the user has been
+        authenticated in templates.
+        """
+        return True
 
 
 class TrainRegistration(models.Model):
     class Meta:
         db_table = 'train_registration'
-        constraints = [
-            models.UniqueConstraint(fields=['train', 'tracking_device'], name='uq_train_registration_train_tracking_device')
-        ]
 
     id = models.UUIDField(primary_key=True)
-    train = models.ForeignKey(Train, on_delete=models.CASCADE)
-    tracking_device = models.ForeignKey(TrackingDevice, on_delete=models.CASCADE)
+    train = models.OneToOneField(Train, on_delete=models.CASCADE)
+    tracking_device = models.OneToOneField(TrackingDevice, on_delete=models.CASCADE)

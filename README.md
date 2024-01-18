@@ -14,8 +14,10 @@
 * tests w/ Docker and testcontainers
 * use https://django-environ.readthedocs.io/en/latest/
 * clean architecture https://github.com/sdediego/django-clean-architecture/tree/main
-* Authentication
-* Dependency injection
+* Authentication +
+* Dependency injection +
+* Error handling
+* Background tasks
 
 # Run:
 ```python manage.py runserver```

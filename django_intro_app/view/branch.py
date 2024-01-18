@@ -1,37 +1,50 @@
+from injector import inject
+from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django_intro_app.exception.invalid_input_exception import InvalidInputException
-from django_intro_app.models import Branch, Line
-from django_intro_app.view.serializers.branch_serializer import BranchSerializer
+from django_intro_app.models import Branch, Direction
+from django_intro_app.service.branch_service import BranchService
 from django_intro_app.view.views import handle_exceptions
 
 
 class BranchAPI(APIView):
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.UUIDField()
+        name = serializers.CharField()
+        direction = serializers.ChoiceField(choices=Direction)
+
     @handle_exceptions
     def get(self, request, id: str) -> Response:
-        return Response(BranchSerializer(Branch.objects.get(id=id)).data)
+        return Response(self.OutputSerializer(Branch.objects.get(id=id)).data)
 
 
 class LineBranchAPI(APIView):
+    class OutputSerializer(serializers.Serializer):
+        id = serializers.UUIDField()
+        name = serializers.CharField()
+        direction = serializers.ChoiceField(choices=Direction)
+
+    class InputSerializer(serializers.Serializer):
+        name = serializers.CharField()
+        direction = serializers.ChoiceField(choices=Direction)
+
+    @inject
+    def __init__(self, branch_service: BranchService):
+        self.branch_service = branch_service
+        super().__init__()
+
     @handle_exceptions
     def get(self, request, line_id):
-        branches = Branch.objects.filter(line=line_id)
         return Response({
-            'branches': BranchSerializer(branches, many=True).data
+            'branches': self.OutputSerializer(self.branch_service.find_branches_by_line(line_id), many=True).data
         })
 
     @handle_exceptions
     def post(self, request, line_id) -> Response:
-        try:
-            line = Line.objects.get(id=line_id)
-        except Line.DoesNotExist:
-            raise InvalidInputException('Line with id %s does not exist' % line_id)
+        serializer = self.InputSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        serialized = BranchSerializer(data=request.data)
-        serialized.is_valid(raise_exception=True)
-        new_branch = Branch(**serialized.validated_data)
-        new_branch.line = line
-        new_branch.save()
+        branch = self.branch_service.create_branch(line_id, **serializer.validated_data)
 
-        return Response(BranchSerializer(new_branch).data)
+        return Response(self.OutputSerializer(branch).data)

@@ -7,3 +7,4 @@ sqlparse==0.4.4
 # HTTP server for Docker deployment
 gunicorn
 psycopg2-binary==2.9.9
+django-injector==0.3.1

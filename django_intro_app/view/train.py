@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from django_intro_app.service.train_service import TrainService
+from django_intro_app.services.train_service import TrainService
 from django_intro_app.utils.authentication import TrackingDeviceAuthentication
 from django_intro_app.view.views import handle_exceptions
 

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from django_intro_app.models import Branch, Direction
-from django_intro_app.service.branch_service import BranchService
+from django_intro_app.services.branch_service import BranchService
 from django_intro_app.view.views import handle_exceptions
 
 

@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from .serializers.line_serializer import LineSerializer
 from .views import handle_exceptions
 from ..models import Line
-from ..service.line_service import LineService
+from ..services.line_service import LineService
 
 line_service = LineService()
 

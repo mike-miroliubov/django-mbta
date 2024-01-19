@@ -1,16 +1,15 @@
 from django.db import migrations, models
 import uuid
 
-green_line = None
-red_line = None
-blue_line = None
-orange_line = None
-silver_line = None
-green_b = None
-green_c = None
-green_d = None
-green_e = None
-
+green_line_uuid = uuid.UUID('f88c33b8-02bf-4abb-8b35-f4d063d39a2d')
+red_line_uuid = uuid.UUID('3d33d693-59da-42e3-a010-8bc228239a10')
+orange_line_uuid = uuid.UUID('cbf157c8-22b0-49cd-8f75-ce62935b7283')
+blue_line_uuid = uuid.UUID('af55a708-cf8e-4a72-9d2c-af1f3a1aed32')
+silver_line_uuid = uuid.UUID('58369f1a-6f68-4341-8a69-9de55ecfeb1e')
+green_b_uuid = uuid.UUID('e06e79c1-d657-4837-ad37-35350136dfa3')
+green_c_uuid = uuid.UUID('2fed3c3e-6d50-49f7-b406-70b441c3898c')
+green_d_uuid = uuid.UUID('3f1c5f95-7ec4-4bbe-97ae-c3ceef3e3d47')
+green_e_uuid = uuid.UUID('5a690d41-0b5c-478e-9075-06556ed93d63')
 
 class Migration(migrations.Migration):
     dependencies = [
@@ -19,33 +18,36 @@ class Migration(migrations.Migration):
 
     def seed_lines(apps, schema_editor):
         Line = apps.get_model('django_intro_app', 'Line')
-        global green_line, red_line, blue_line, orange_line, silver_line
+        global green_line_uuid, silver_line_uuid, blue_line_uuid, orange_line_uuid, red_line_uuid
 
-        green_line = Line.objects.create(id=uuid.uuid4(), name='Green Line', color='green')
-        red_line = Line.objects.create(id=uuid.uuid4(), name='Red Line', color='red')
-        orange_line = Line.objects.create(id=uuid.uuid4(), name='Orange Line', color='orange')
-        blue_line = Line.objects.create(id=uuid.uuid4(), name='Blue Line', color='blue')
-        silver_line = Line.objects.create(id=uuid.uuid4(), name='Silver Line', color='silver')
+        Line.objects.create(id=green_line_uuid, name='Green Line', color='green')
+        Line.objects.create(id=red_line_uuid, name='Red Line', color='red')
+        Line.objects.create(id=orange_line_uuid, name='Orange Line', color='orange')
+        Line.objects.create(id=blue_line_uuid, name='Blue Line', color='blue')
+        Line.objects.create(id=silver_line_uuid, name='Silver Line', color='silver')
 
     def seed_lines_reverse(apps, schema_editor):
-        global green_line, red_line, blue_line, orange_line, silver_line
-        # migrations are unapplied in the reverse order, so the lines have been already set by
-        # seed_branches_reverse function
-        green_line.delete()
-        red_line.delete()
-        orange_line.delete()
-        blue_line.delete()
-        silver_line.delete()
+        global green_line_uuid, silver_line_uuid, blue_line_uuid, orange_line_uuid, red_line_uuid
+        Line = apps.get_model('django_intro_app', 'Line')
+        for line_uuid in [green_line_uuid, silver_line_uuid, blue_line_uuid, orange_line_uuid, red_line_uuid]:
+            Line.objects.get(id=line_uuid).delete()
 
     def seed_branches(apps, schema_editor):
         Branch = apps.get_model('django_intro_app', 'Branch')
+        Line = apps.get_model('django_intro_app', 'Line')
 
-        global green_b, green_c, green_d, green_e
+        global green_line_uuid
+        global green_b_uuid, green_c_uuid, green_d_uuid, green_e_uuid
 
-        green_b = Branch.objects.create(id=uuid.uuid4(), name='B', line=green_line, direction=0)
-        green_c = Branch.objects.create(id=uuid.uuid4(), name='C', line=green_line, direction=0)
-        green_d = Branch.objects.create(id=uuid.uuid4(), name='D', line=green_line, direction=0)
-        green_e = Branch.objects.create(id=uuid.uuid4(), name='E', line=green_line, direction=0)
+        green_line = Line.objects.get(id=green_line_uuid)
+        red_line = Line.objects.get(id=red_line_uuid)
+        blue_line = Line.objects.get(id=blue_line_uuid)
+        orange_line = Line.objects.get(id=orange_line_uuid)
+        silver_line = Line.objects.get(id=silver_line_uuid)
+        Branch.objects.create(id=green_b_uuid, name='B', line=green_line, direction=0)
+        Branch.objects.create(id=green_c_uuid, name='C', line=green_line, direction=0)
+        Branch.objects.create(id=green_d_uuid, name='D', line=green_line, direction=0)
+        Branch.objects.create(id=green_e_uuid, name='E', line=green_line, direction=0)
 
         Branch.objects.create(id=uuid.uuid4(), name='Ashmont', line=red_line, direction=0)
         Branch.objects.create(id=uuid.uuid4(), name='Mattapan', line=red_line, direction=0)
@@ -61,7 +63,6 @@ class Migration(migrations.Migration):
         Branch.objects.create(id=uuid.uuid4(), name='SL5', line=silver_line, direction=0)
 
     def seed_branches_reverse(apps, schema_editor):
-        global green_line, red_line, blue_line, orange_line, silver_line
         Branch = apps.get_model('django_intro_app', 'Branch')
         Line = apps.get_model('django_intro_app', 'Line')
 
@@ -78,10 +79,13 @@ class Migration(migrations.Migration):
         Branch.objects.filter(line=silver_line).delete()
 
     def seed_stations(apps, schema_editor):
-        global green_b, green_c, green_d, green_e
-        global green_line
+        global green_b_uuid, green_c_uuid, green_d_uuid, green_e_uuid
+        global green_line_uuid
+        Line = apps.get_model('django_intro_app', 'Line')
+        green_line = Line.objects.get(id=green_line_uuid)
 
         Station = apps.get_model('django_intro_app', 'Station')
+        Branch = apps.get_model('django_intro_app', 'Branch')
 
         stations_cache = {}
 
@@ -116,10 +120,10 @@ class Migration(migrations.Migration):
                             "Brigham Circle", "Fenwood Road", "Mission Park", "Riverway", "Back of the Hill",
                             "Heath Street"]
 
-        create_stations(green_c_stations, green_c, green_line)
-        create_stations(green_b_stations, green_b, green_line)
-        create_stations(green_d_stations, green_d, green_line)
-        create_stations(green_e_stations, green_e, green_line)
+        create_stations(green_c_stations, Branch.objects.get(id=green_c_uuid), green_line)
+        create_stations(green_b_stations, Branch.objects.get(id=green_b_uuid), green_line)
+        create_stations(green_d_stations, Branch.objects.get(id=green_d_uuid), green_line)
+        create_stations(green_e_stations, Branch.objects.get(id=green_e_uuid), green_line)
 
     def seed_stations_reverse(apps, schema_editor):
         Station = apps.get_model('django_intro_app', 'Station')

@@ -16,5 +16,5 @@ class LineModelTests(TestCase):
 
         # then
         print(lines)
-        # logging.info(lines)
-        self.assertQuerySetEqual(set(lines), {black, white}, ordered=False)
+        self.assertIn(black, set(lines))
+        self.assertIn(white, set(lines))

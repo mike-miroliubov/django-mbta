@@ -28,6 +28,10 @@ class Migration(migrations.Migration):
             for train_name in trains:
                 Train.objects.create(id=uuid.uuid4(), name=train_name, branch=branch)
 
+    def seed_train_undo(apps, schema_editor):
+        Train = apps.get_model('django_intro_app', 'Train')
+        Train.objects.all().delete()
+
     operations = [
-        migrations.RunPython(seed_trains, reverse_code=migrations.RunPython.noop)
+        migrations.RunPython(seed_trains, reverse_code=seed_train_undo)
     ]

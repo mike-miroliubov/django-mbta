@@ -6,7 +6,7 @@ from injector import inject
 
 from django_intro_app.exception.invalid_input_exception import InvalidInputException
 from django_intro_app.models import Train, TrainRegistration, TrackingDevice
-from django_intro_app.repository.train_repository import TrainRepository
+from django_intro_app.repository import TrainRepository
 
 
 class TrainService:

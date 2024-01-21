@@ -10,34 +10,32 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from pathlib import Path
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+from config.env import BASE_DIR, env # APPS_DIR
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", default='django-insecure-#hm$(_%@g4bn^4vv!dz6u12((1+0&ayl@(m%hg5#g!9kd12842')
+SECRET_KEY = env("DJANGO_SECRET_KEY", default='django-insecure-#hm$(_%@g4bn^4vv!dz6u12((1+0&ayl@(m%hg5#g!9kd12842')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', default=False))
+DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",") if os.environ.get("DJANGO_ALLOWED_HOSTS") else []
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django_intro_app.apps.DjangoIntroAppConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_intro_app.apps.DjangoIntroAppConfig',
 
     'rest_framework',
     'django_injector',
@@ -53,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'django_intro.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -71,21 +69,23 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'django_intro.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": os.environ.get("DJANGO_SQL_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.environ.get("DJANGO_SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        "USER": os.environ.get("DJANGO_SQL_USER"),
-        "PASSWORD": os.environ.get("DJANGO_SQL_PASSWORD"),
-        "HOST": os.environ.get("DJANGO_SQL_HOST", "localhost"),
-        "PORT": os.environ.get("DJANGO_SQL_PORT", "5432"),
-    }
+    "default" : env.db("DJANGO_DATABASE_URL", default="sqlite:///" + str(BASE_DIR / "db.sqlite3"))
+    # instead of
+    # "default": {
+    #     "ENGINE": env("DJANGO_SQL_ENGINE", default="django.db.backends.sqlite3"),
+    #     "NAME": env("DJANGO_SQL_DATABASE", default=str(BASE_DIR / "db.sqlite3")),
+    #     "USER": os.environ.get("DJANGO_SQL_USER"),
+    #     "PASSWORD": os.environ.get("DJANGO_SQL_PASSWORD"),
+    #     "HOST": os.environ.get("DJANGO_SQL_HOST", "localhost"),
+    #     "PORT": os.environ.get("DJANGO_SQL_PORT", "5432"),
+    # }
 }
 
 # Password validation

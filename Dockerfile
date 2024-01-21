@@ -11,7 +11,7 @@ COPY ./requirements.txt /opt/app
 WORKDIR /opt/app
 RUN pip install -r requirements.txt
 
-COPY ./django_intro /opt/app/django_intro
+COPY ./config /opt/app/config
 COPY ./django_intro_app /opt/app/django_intro_app
 COPY ./manage.py /opt/app
 COPY ./scripts/run.sh /opt/app

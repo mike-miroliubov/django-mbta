@@ -12,7 +12,7 @@
 * real database +
 * * connection pool  
 * tests w/ Docker and testcontainers
-* use https://django-environ.readthedocs.io/en/latest/
+* use https://django-environ.readthedocs.io/en/latest/ +
 * clean architecture https://github.com/sdediego/django-clean-architecture/tree/main
 * Authentication +
 * Dependency injection +
@@ -24,7 +24,7 @@
 
 OR
 
-```gunicorn django_intro.wsgi:application --bind 0.0.0.0:8000```
+```gunicorn config.wsgi:application --bind 0.0.0.0:8000```
 
 # Run in Docker
 ```

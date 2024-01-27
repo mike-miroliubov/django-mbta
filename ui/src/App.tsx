@@ -1,8 +1,9 @@
-import React from 'react';
 //import './App.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Layout, Menu, theme, Breadcrumb } from 'antd';
-import { MenuItemType, SubMenuType } from 'antd/es/menu/hooks/useItems';
+import { Layout, theme } from 'antd';
+import HeaderMenu from './components/header-menu';
+import SiderMenu from './components/sider-menu';
+import Path from './components/path';
 
 const queryClient = new QueryClient()
 
@@ -18,26 +19,6 @@ export default AppWrapper
 
 const { Header, Content, Sider } = Layout;
 
-const headerItems: MenuItemType[] = [
-  {key: 1, label: 'nav 1'},
-  {key: 2, label: 'nav 2'},
-  {key: 3, label: 'nav 3'},
-]
-
-const siderItems: SubMenuType[] = [
-  {
-    key: '1', 
-    label: `subnav 1`,
-    children: [
-      { key: 11, label: 'sub1' },
-      { key: 12, label: 'sub2' },
-      { key: 13, label: 'sub3' },
-    ]
-  },
-  {key: '2', label: `subnav 2`, children: [{ key: 21, label: 'sub4' }]},
-  {key: '3', label: `subnav 3`, children: []},
-]
-
 function App() {
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -46,31 +27,15 @@ function App() {
   return (
     <Layout style={{ height: '100vh' }}>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
-        <Menu
-            theme="dark"
-            mode="horizontal"
-            defaultSelectedKeys={['2']}
-            items={headerItems}
-            style={{ flex: 1, minWidth: 0 }}
-          />
+        <HeaderMenu />
       </Header>
       <Layout>
         <Sider width={200} style={{ background: colorBgContainer }}>
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['11']}
-            defaultOpenKeys={['1']}
-            style={{ height: '100%', borderRight: 0 }}
-            items={siderItems}
-          />
+          <SiderMenu />
         </Sider>
 
         <Layout style={{ padding: '0 24px 24px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>Whatever</Breadcrumb.Item>
-            <Breadcrumb.Item>Whatever</Breadcrumb.Item>
-            <Breadcrumb.Item>Whatever</Breadcrumb.Item>
-          </Breadcrumb>
+          <Path />
           <Content style={{
               padding: 24,
               margin: 0,

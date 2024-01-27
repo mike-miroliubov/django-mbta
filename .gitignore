@@ -3,3 +3,5 @@
 /db.sqlite3
 /db/
 **/__pycache__/
+/ui/node_modules/
+.idea/

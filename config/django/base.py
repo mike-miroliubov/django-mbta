@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 
 from config.env import BASE_DIR, env # APPS_DIR
+from corsheaders.defaults import default_headers
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -39,9 +40,11 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_injector',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -69,6 +72,7 @@ TEMPLATES = [
     },
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True
 WSGI_APPLICATION = 'config.wsgi.application'
 
 

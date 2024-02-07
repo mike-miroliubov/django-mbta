@@ -1,6 +1,11 @@
 import { Layout, theme } from "antd"
 import SiderMenu from './sider-menu';
 import Path from './path';
+import LineService from "../services/lines-service";
+import React from "react";
+import Line from "../entity/line";
+
+const lineService = new LineService()
 
 const Lines = () => {
   const {
@@ -9,6 +14,16 @@ const Lines = () => {
 
   const { Content, Sider } = Layout;
 
+  // useState React Hook sets component state
+  // https://react.dev/learn/state-a-components-memory
+  const [lines, setLines] = React.useState<Line[]>([])
+
+  React.useEffect(() => {
+    lineService.getLines().then(lines => {
+      setLines(lines)
+    })
+  }, [])
+  
   return (
     <Layout>
       <Sider width={200} style={{ background: colorBgContainer }}>
@@ -24,7 +39,7 @@ const Lines = () => {
           background: colorBgContainer,
           borderRadius: borderRadiusLG,
         }}>
-          Content Lines
+          {lines.map(l => l.name).join(",")}
         </Content>
       </Layout>
     </Layout>

@@ -6,7 +6,6 @@ import Lines from './components/lines';
 import Trains from './components/trains';
 import Current from './components/current';
 import Tab from './model/tab';
-import { tab } from '@testing-library/user-event/dist/tab';
 import { RouterProvider } from 'react-router-dom';
 import { createBrowserRouter } from 'react-router-dom'
 
@@ -23,37 +22,26 @@ const getActiveTab = (tab: Tab) => {
   }
 }
 
-const App = (props: { tab: Tab }) => {
+// object deconstruction of function params - on the right side, type on the left side of :
+const App = ({ tab }: { tab: Tab }) => {
   const { Header } = Layout;
 
   return (
     <Layout style={{ height: '100vh' }}>
       <Header style={{ display: 'flex', alignItems: 'center' }}>
-        <HeaderMenu tab={props.tab} />
+        <HeaderMenu tab ={tab} />
       </Header>
 
-      { getActiveTab(props.tab) }
+      {getActiveTab(tab)}
     </Layout>
   );
 }
 
 const router = createBrowserRouter([
-  {
-      path: '/',
-      element: App({ tab: Tab.LINES })
-  },
-  {
-      path: '/lines',
-      element: App({ tab: Tab.LINES })
-  },
-  {
-      path: '/trains',
-      element: App({ tab: Tab.TRAINS })
-  },
-  {
-      path: '/current',
-      element: App({ tab: Tab.CURRENT }),
-  },
+  { path: '/', element: App({ tab: Tab.LINES }) },
+  { path: '/lines', element: App({ tab: Tab.LINES }) },
+  { path: '/trains', element: App({ tab: Tab.TRAINS }) },
+  { path: '/current', element: App({ tab: Tab.CURRENT }), },
 ])
 
 const AppWrapper = () => {

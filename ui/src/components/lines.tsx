@@ -1,5 +1,5 @@
 import { Layout, theme } from "antd"
-import SiderMenu from './sider-menu';
+import SiderMenu, { SiderGroup } from './sider-menu';
 import Path from './path';
 import LineService from "../services/lines-service";
 import React from "react";
@@ -23,11 +23,14 @@ const Lines = () => {
       setLines(lines)
     })
   }, [])
+
+  // (lines: Line[]) => SiderGroup[]
+  const linesToSiderGroups = (lines: Line[]) => lines.map(l => ({ id: l.id, label: l.name, color: l.color } as SiderGroup))
   
   return (
     <Layout>
       <Sider width={200} style={{ background: colorBgContainer }}>
-        <SiderMenu />
+        <SiderMenu groups={linesToSiderGroups(lines)} />
       </Sider>
 
       <Layout style={{ padding: '0 24px 24px' }}>

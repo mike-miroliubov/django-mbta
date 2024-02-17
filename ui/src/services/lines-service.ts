@@ -7,8 +7,7 @@ interface LineResponse {
 
 export default class LineService {
     public async getLines(): Promise<Line[]> {
-        const response = await api.get('v1/lines')
-        const data: LineResponse = response.data
-        return data.lines
+        const response = await api.get<LineResponse>('v1/lines')
+        return response.data.lines
     }
 }

@@ -25,7 +25,12 @@ export interface SiderGroup {
 
 const branchService = new BranchService()
 
-const SiderMenu = ({ groups }: { groups?: SiderGroup[] }) => {
+interface SiderProps { 
+  groups?: SiderGroup[]
+  onItemSelected?: (key: string) => void
+}
+
+const SiderMenu = ({ groups, onItemSelected }: SiderProps) => {
   const [openedGroups, setOpenedGroups] = useState<string[]>([])
   const [menuItems, setMenuItems] = useState<SubMenuType[]>([])
 
@@ -60,6 +65,10 @@ const SiderMenu = ({ groups }: { groups?: SiderGroup[] }) => {
       style={{ height: '100%', borderRight: 0 }}
       items={[...menuItems]}
       onOpenChange={onGroupOpen}
+      onSelect={onItemSelected && ((info) => {
+        onItemSelected(info.key)
+        info.domEvent.stopPropagation()
+      })}
     />
   );
 }

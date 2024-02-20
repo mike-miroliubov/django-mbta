@@ -2,7 +2,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Layout, theme } from 'antd';
 import HeaderMenu from './components/header-menu';
-import Lines from './components/lines';
+import Lines from './components/lines/lines';
 import Trains from './components/trains';
 import Current from './components/current';
 import Tab from './model/tab';

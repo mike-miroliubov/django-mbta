@@ -1,10 +1,13 @@
-import React from "react";
-import StationService from "../services/station-service"
-import { Station } from "../entity/station"
+import React, { useContext } from "react";
+import StationService from "../../services/station-service"
+import { Station } from "../../entity/station"
+import { LinesContext } from "./lines-context";
 
 const stationService = new StationService()
 
-const Stations = ({branchId}: {branchId?: string}) => {
+const Stations = () => {
+    const context = useContext(LinesContext)
+    // store station as local state
     const [stations, setStations] = React.useState<Station[]>([])
     
     React.useEffect(() => {
@@ -13,13 +16,13 @@ const Stations = ({branchId}: {branchId?: string}) => {
             setStations(stations)
         }
 
-        if (branchId) {
-            getStations(branchId)
+        if (context.selectedBranchId) {
+            getStations(context.selectedBranchId)
         }
-    }, [branchId])
+    }, [context])
     
     const buildList = () => {
-        if (!branchId) {
+        if (!context.selectedBranchId) {
             return <></>
         }
         if (stations.length > 0) {

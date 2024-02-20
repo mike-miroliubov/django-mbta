@@ -1,11 +1,10 @@
 import { Layout, theme } from "antd"
-import SiderMenu, { SiderGroup } from '../sider-menu';
 import Path from '../path';
 import LineService from "../../services/lines-service";
-import React from "react";
+import React, { useReducer } from "react";
 import Line from "../../entity/line";
 import Stations from "./stations";
-import { LinesContext } from "./lines-context";
+import { LinesContext, LinesState } from "./lines-context";
 import { LinesMenu } from "./lines-menu";
 
 const lineService = new LineService()
@@ -16,25 +15,22 @@ const Lines = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  // useState React Hook sets component state
-  // https://react.dev/learn/state-a-components-memory
-  const [lines, setLines] = React.useState<Line[]>([])
-  const [selectedBranchId, setSelectedBranchId] = React.useState<string>('')
+  const [state, dispatch] = useReducer(linesReducer, {lines: []})
 
   React.useEffect(() => {
     lineService.getLines().then(lines => {
-      setLines(lines)
+      dispatch(new LinesLoadedEvent(lines))
     })
   }, [])
 
   const onItemSelected = (key: string) => { 
-    setSelectedBranchId(key)
+    dispatch(new BranchSelectedEvent(key))
   }
 
   return (
     <Layout>
       { /* pass state in context to child components */ }
-      <LinesContext.Provider value={{lines: lines, selectedBranchId: selectedBranchId}}>
+      <LinesContext.Provider value={state}>
         <LinesMenu onItemSelected={onItemSelected} />
 
         <Layout style={{ padding: '0 24px 24px' }}>
@@ -55,3 +51,43 @@ const Lines = () => {
 }
 
 export default Lines
+
+type LinesEventType = 'LINES_LOADED' | 'BRANCH_SELECTED'
+
+interface LinesEvent {
+  type: LinesEventType
+}
+
+class LinesLoadedEvent implements LinesEvent {
+  readonly type: LinesEventType = 'LINES_LOADED'
+  lines: Line[]
+
+  constructor(lines: Line[]) {
+    this.lines = lines
+  }
+}
+
+class BranchSelectedEvent implements LinesEvent {
+  readonly type: LinesEventType = 'BRANCH_SELECTED'
+  selectedBranchId: string
+
+  constructor(selectedBranchId: string) {
+    this.selectedBranchId = selectedBranchId
+  }
+}
+
+const linesReducer = (state: LinesState, event: LinesEvent) => {
+  switch(event.type) {
+    case "LINES_LOADED": {
+      const linesLoaded = event as LinesLoadedEvent
+      return {...state, lines: linesLoaded.lines}
+    }
+    case "BRANCH_SELECTED": {
+      const branchSelected = event as BranchSelectedEvent
+      return {...state, selectedBranchId: branchSelected.selectedBranchId}
+    }
+    default: {
+      throw Error(`Unexpected event type ${event.type}`)
+    }
+  }
+}

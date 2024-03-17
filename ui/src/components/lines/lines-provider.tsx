@@ -1,48 +1,29 @@
-import { PropsWithChildren, createContext, useContext, useEffect, useReducer } from "react";
-import Line from "../../entity/line";
-import LineService from "../../services/lines-service";
+import { PropsWithChildren, createContext, useContext, useReducer } from "react";
 
 export interface LinesState {
-    lines: Line[]
     selectedBranchId?: string
 }
 
-export type LinesEventType = 'LINES_LOADED' | 'BRANCH_SELECTED'
+export type LinesEventType = 'BRANCH_SELECTED'
 
 export interface LinesEvent {
     type: LinesEventType
 }
 
-export class LinesLoadedEvent implements LinesEvent {
-    readonly type: LinesEventType = 'LINES_LOADED'
-    lines: Line[]
-
-    constructor(lines: Line[]) {
-        this.lines = lines
-    }
-}
-
 export class BranchSelectedEvent implements LinesEvent {
     readonly type: LinesEventType = 'BRANCH_SELECTED'
-    selectedBranchId: string
+    selectedBranchId?: string
 
     constructor(selectedBranchId: string) {
         this.selectedBranchId = selectedBranchId
     }
 }
 
-export const LinesContext = createContext<LinesState>({ lines: [] })
+export const LinesContext = createContext<LinesState>({ })
 export const LinesDispatchContext = createContext<React.Dispatch<LinesEvent> | null>(null)
 
-const lineService = new LineService()
-
 export const LinesProvider: React.FC<PropsWithChildren> = ({ children }: PropsWithChildren) => {
-    const [state, dispatch] = useReducer(linesReducer, { lines: [] })
-    useEffect(() => {
-        lineService.getLines().then(lines => {
-          dispatch(new LinesLoadedEvent(lines))
-        })
-      }, [])
+    const [state, dispatch] = useReducer(linesReducer, { selectedBranchId: undefined })
 
     return (
         <LinesContext.Provider value={state}>
@@ -55,12 +36,9 @@ export const LinesProvider: React.FC<PropsWithChildren> = ({ children }: PropsWi
 
 const linesReducer = (state: LinesState, event: LinesEvent) => {
     switch (event.type) {
-      case "LINES_LOADED": {
-        const linesLoaded = event as LinesLoadedEvent
-        return { ...state, lines: linesLoaded.lines }
-      }
       case "BRANCH_SELECTED": {
         const branchSelected = event as BranchSelectedEvent
+        console.log(`State change, branch selected: ${branchSelected.selectedBranchId}`)
         return { ...state, selectedBranchId: branchSelected.selectedBranchId }
       }
       default: {

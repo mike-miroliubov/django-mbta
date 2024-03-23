@@ -1,22 +1,10 @@
-import StationService from "../../services/station-service"
+import { useStationsQuery } from "../../services/station-service"
 import { useLinesState } from "./lines-provider";
-import { useQuery } from "@tanstack/react-query";
-
-const stationService = new StationService()
 
 const Stations = () => {
     const linesState = useLinesState()
 
-    const stations = useQuery({
-        queryKey: ['stations', linesState.selectedBranchId],
-        queryFn: async () => {
-            if (linesState.selectedBranchId) {
-                return stationService.getStations(linesState.selectedBranchId)
-            }
-            return []
-        },
-        staleTime: 1000 * 60 // refresh every hour
-    })
+    const stations = useStationsQuery(linesState.selectedBranchId)
 
     if (!linesState.selectedBranchId) {
         return <div>Select branch to display stations</div>

@@ -44,8 +44,10 @@ const SiderMenu = ({ groups, onItemSelected }: SiderProps) => {
 
     // find newly opened groups
     const newlyOpened = openKeys.filter(key => !openedGroups.includes(key))
+    // menuItems cache loaded children. Opened items already have children, no need to fetch again
+    const linesToFetch = newlyOpened.filter(openKey => itemsCopy.find(it => it.key == openKey)?.children.length == 0)
 
-    await Promise.all(newlyOpened.map(async (openKey) => {
+    await Promise.all(linesToFetch.map(async (openKey) => {
       const branches = await branchService.getBranches(openKey)
       const item = itemsCopy.find(it => it.key == openKey)
       if (item) {
